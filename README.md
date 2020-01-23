@@ -1,5 +1,5 @@
 # Study_springboot-aws-starter
-스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (이동욱) 소스
+### 스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (이동욱) 소스
 - https://github.com/jojoldu/freelec-springboot2-webservice 참조
 
 ---
@@ -15,3 +15,18 @@ SpringBoot 2.1.7 RELEASE
 - 2.2.X 이상 안됨
 
 Jnuit5
+
+---
+
+### [Contents]
+#### DTO, Entity
+* DTO와 Entity는 구분해서 사용할 것(역할 분리)
+* DTO > View layer (사소한 기능 변경)
+* Entity > DB layer (DB 연동 큰 변경 > request, response 클래스로 사용하지 말 것)
+ 
+#### PostsApiControllerTest
+* @WebMvcTest : JPA 기능이 작동하지 않음, 외부 연동과 관련된 부분만 활성화(Controller, ControllerAdvice 등)
+* @SpringBootTest + TestRestTemplate 사용
+
+#### PostsApiController
+* Long save(@RequestBody PostsSaveRequestDto requestDto) 는 @PutMapping이 아닌 @PostMapping(오타로 예상)
