@@ -3,8 +3,8 @@
 - https://github.com/jojoldu/freelec-springboot2-webservice 참조
 
 ---
-JDK 1.8(1.8.0_192) 
-- java 9 이상은 API 등이 다름
+oracle JDK 1.8(1.8.0_192) or zulu JDK 1.8(1.8.0_232) 
+- java 9 이상은 지원 API 등이 다름
 
 Gradle (4.10.2) 
 - gradle/wrapper/gradle-wrapper.properties 파일 안에 4.10.2 설정
