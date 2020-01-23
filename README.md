@@ -29,4 +29,4 @@ Jnuit5
 * @SpringBootTest + TestRestTemplate 사용
 
 #### PostsApiController
-* Long save(@RequestBody PostsSaveRequestDto requestDto) 는 @PutMapping이 아닌 @PostMapping(오타로 예상)
+* public Long save(@RequestBody PostsSaveRequestDto requestDto) 메소드는 @PutMapping이 아닌 @PostMapping(오타로 예상)
