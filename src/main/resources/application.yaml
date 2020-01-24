@@ -1,4 +1,14 @@
 spring:
+  devtools:
+    livereload:
+      enabled: true
+  freemarker:
+    cache: false
+#  mvc:
+#    static-path-pattern: /static/**
+#  resources:
+#    static-locations: classpath:/static/
+#    add-mappings: true
   jpa:
     show-sql: true
     properties:

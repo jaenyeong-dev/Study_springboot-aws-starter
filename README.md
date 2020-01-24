@@ -30,3 +30,10 @@ Jnuit5
 
 #### PostsApiController
 * public Long save(@RequestBody PostsSaveRequestDto requestDto) 메소드는 @PutMapping이 아닌 @PostMapping(오타로 예상)
+
+#### h2-console
+* URL : http://localhost:8080/h2-console
+* JDBC URL : jdbc:h2:mem:testdb
+
+#### index.js
+* IndexController에서 public String index() 메소드 GetMapping 어노테이션에 path ("/") 꼭 붙여줄 것
