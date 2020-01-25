@@ -73,3 +73,6 @@ Jnuit5
 * SessionUser user = (User) httpSession.getAttribute("user"); (오타로 예상)
 * 타입 캐스팅을 User > SessionUser로 수정
 
+#### spring-session-jdbc
+* gradle 의존성 추가시 h2에 테이블 자동생성(JPA에 의해)
+* SPRING_SESSION, SPRING_SESSION_ATTRIBUTES
