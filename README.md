@@ -55,6 +55,7 @@ Jnuit5
 * OpenId Provider 서비스(구글 등)와 아닌 서비스(네이버, 카카오 등)를 나눠 각각 OAuth2Service를 생성해야 함
 * 따라서 하나의 OAuth2Service로 사용하기 위해 openid scope 제거
 * 클라이언트 ID, Secret 등 때문에 gitignore에 추가
+* registration 설정
   - spring.security.oauth2.client.registration.google.client-id = ***
   - spring.security.oauth2.client.registration.google.client-secret = ***
   - spring.security.oauth2.client.registration.google.scope = profile, email
@@ -62,6 +63,7 @@ Jnuit5
 #### application.yaml(properties)
 * 스프링 부트에서는 application-xxx.yaml(properties) 파일을 xxx라는 이름의 profile으로 인식
 * spring.profiles.include = oauth 추가
+* yaml 파일에서 {} 사용시 ''으로 감싸야함(문법)
 
 #### 스프링 시큐리티 ROLE
 * 스프링 시큐리티에서 권한 코드에는 항상 ROLE이 앞에 있어야 함
@@ -76,3 +78,19 @@ Jnuit5
 #### spring-session-jdbc
 * gradle 의존성 추가시 h2에 테이블 자동생성(JPA에 의해)
 * SPRING_SESSION, SPRING_SESSION_ATTRIBUTES
+
+#### Naver ID login
+* 네이버는 스프링 시큐리티를 공식 지원하지 않아 CommonOAuth2Provider에서 해주는 값도 전부 수동 입력 필요
+* registration 설정
+  - spring.security.oauth2.client.registration.naver.client-id = ***
+  - spring.security.oauth2.client.registration.naver.client-secret = ***
+  - spring.security.oauth2.client.registration.naver.scope = name, email, profile_image
+  - spring.security.oauth2.client.registration.naver.redirect_uri_template = {baseUrl}/{action}/oauth2/code/{registrationId}
+  - spring.security.oauth2.client.registration.naver.authorization_grant_type = authorization_code
+  - spring.security.oauth2.client.registration.naver.client-name = Naver
+* provider 설정
+  - spring.security.oauth2.client.provider.naver.authorization_uri = https://nid.naver.com/oauth2.0/authorize
+  - spring.security.oauth2.client.provider.naver.token_uri = https://nid.naver.com/oauth2.0/token
+  - spring.security.oauth2.client.provider.naver.user-info-uri = https://openapi.naver.com/v1/nid/me
+  - spring.security.oauth2.client.provider.naver.user_name_attribute = response
+    네이버 회원 조회시 반환되는 JSON 형태 때문에 기준이 되는 user_name의 이름을 response로 해야함

@@ -20,6 +20,10 @@
                 <!-- href="/oauth2/authorization/google" : 스프링 시큐리티에서 기본적으로 제공하는 로그인 URL -->
                 <!-- 따라서 개발자가 별도로 해당 URL 컨트롤러를 만들 필요 없음 -->
                 <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+
+                <!-- href="/oauth2/authorization/naver" : application-oauth 파일에 등록한 redirect_uri_template 값에 맞춰 자동 등록됨 -->
+                <!-- /oauth2/authorization/ 까지 고정, 마지막 Path만 각 소셜 로그인 코드를 사용하면 됨 -->
+                <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
             {{/userName}}
         </div>
     </div>
@@ -39,7 +43,7 @@
         {{#posts}}
             <tr>
                 <td>{{id}}</td>
-                <!--                <td>{{title}}</td>-->
+                <!--<td>{{title}}</td>-->
                 <td><a href="/posts/update/{{id}}">{{title}}</a></td>
                 <td>{{author}}</td>
                 <td>{{modifiedDate}}</td>
