@@ -37,3 +37,39 @@ Jnuit5
 
 #### index.js
 * IndexController에서 public String index() 메소드 GetMapping 어노테이션에 path ("/") 꼭 붙여줄 것
+
+#### Google Cloud Platform 구글 서비스 등록
+* 새 프로젝트 생성
+* API 및 서비스 > 사용자 인증 정보 만들기 (OAuth 클라이언트 ID로 생성)
+* 동의화면 구성 (앱 이름, 지원 이메일, Google API 범위 등 확인)
+* 승인된 리디렉션 URI 설정 (승인 후 이동할 URL) 
+  - 스프링 시큐리티는 기본적으로 리다이렉트 URL이 {도메인}/login/oauth2/code/{소셜서비스코드}로 되어 있음
+  
+#### spring security oauth2 client 라이브러리 사용
+* spring-security-oauth2-autoconfigure 는 사용함에 문제는 없으나 신규 기능 추가가 되지 않음
+* spring-security-oauth2-client의 스프링 부트용 라이브러리(starter) 출시
+
+#### application-oauth.yaml(properties)
+* spring.security.oauth2.client.registration.google.scope: profile,email
+* 강제로 profile, email 등록 (기본은 openid, profile, email)
+* OpenId Provider 서비스(구글 등)와 아닌 서비스(네이버, 카카오 등)를 나눠 각각 OAuth2Service를 생성해야 함
+* 따라서 하나의 OAuth2Service로 사용하기 위해 openid scope 제거
+* 클라이언트 ID, Secret 등 때문에 gitignore에 추가
+  - spring.security.oauth2.client.registration.google.client-id = ***
+  - spring.security.oauth2.client.registration.google.client-secret = ***
+  - spring.security.oauth2.client.registration.google.scope = profile, email
+
+#### application.yaml(properties)
+* 스프링 부트에서는 application-xxx.yaml(properties) 파일을 xxx라는 이름의 profile으로 인식
+* spring.profiles.include = oauth 추가
+
+#### 스프링 시큐리티 ROLE
+* 스프링 시큐리티에서 권한 코드에는 항상 ROLE이 앞에 있어야 함
+
+#### spring-boot-starter-oauth2-client
+* spring-security-oauth2-client와 spring-security-oauth2-jose를 기본 관리해줌
+
+#### IndexController
+* SessionUser user = (User) httpSession.getAttribute("user"); (오타로 예상)
+* 타입 캐스팅을 User > SessionUser로 수정
+

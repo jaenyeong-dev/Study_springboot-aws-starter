@@ -6,6 +6,21 @@
     <div class="row">
         <div class="col-md-6">
             <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+            <!-- mustache는 if문을 제공하지 않고 true, false만 판단 -->
+            <!-- 따라서 mustache에 항상 최종값을 넘겨줘야함 -->
+            {{#userName}}
+                Logged in as: <span id="user">{{userName}}</span>
+                <!-- href="/logout" : 스프링 시큐리티에서 기본적으로 제공하는 로그아웃 URL -->
+                <!-- 따라서 개발자가 별도로 해당 URL 컨트롤러를 만들 필요 없음 -->
+                <!-- SecurityConfig에서 URL 변경가능하지만 그대로 사용 -->
+                <a href="/logout" class="btn btn-info active" role="button">Logout</a>
+            {{/userName}}
+            <!-- mustache에서 해당 값이 존재하지 않으면 ^를 사용 (userName 없을때 로그인 버튼 노출) -->
+            {{^userName}}
+                <!-- href="/oauth2/authorization/google" : 스프링 시큐리티에서 기본적으로 제공하는 로그인 URL -->
+                <!-- 따라서 개발자가 별도로 해당 URL 컨트롤러를 만들 필요 없음 -->
+                <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+            {{/userName}}
         </div>
     </div>
 
@@ -24,7 +39,7 @@
         {{#posts}}
             <tr>
                 <td>{{id}}</td>
-<!--                <td>{{title}}</td>-->
+                <!--                <td>{{title}}</td>-->
                 <td><a href="/posts/update/{{id}}">{{title}}</a></td>
                 <td>{{author}}</td>
                 <td>{{modifiedDate}}</td>
