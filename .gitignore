@@ -1,6 +1,5 @@
 .idea
 src/main/resources/application-oauth.yaml
-src/main/resources/application-backOauth.properties
 
 # Created by https://www.gitignore.io/api/macos,gradle,java-web,intellij
 # Edit at https://www.gitignore.io/?templates=macos,gradle,java-web,intellij
