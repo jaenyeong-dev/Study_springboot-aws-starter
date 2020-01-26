@@ -101,3 +101,22 @@ Jnuit5
 * spring-security-test 의존성 추가 (testImplementation)
   - @WithMockUser 어노테이션은 MockMvc에서만 작동
 * @WebMvcTest에 secure 옵션은 2.1부터 Deprecated 되었음
+
+#### AWS 인프라 구축
+* EC2 생성 (Default VPC, Subnet & 새 보안그룹 생성)
+* EIP 생성 (Amazon ) 및 연결
+* EC2 Java 세팅
+  - sudo yum install -y java-1.8.0.openjdk-devel.x86_64
+  - sudo /usr/sbin/alternatives --config java
+  - sudo yum remove java-1.7.0-openjdk
+  - java -version
+* EC2 UTC > KST 세팅
+  - sudo rm /etc/localtime
+  - sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+* EC2 hostname 세팅
+  - sudo vim /etc/sysconfig/network
+    - HOSTNAME springboot-aws-starter (속성 값 변경)
+  - sudo reboot
+  - sudo vim /etc/hosts
+    - 127.0.0.1 springboot-aws-starter (추가)
+    - curl springboot-aws-starter (확인)
