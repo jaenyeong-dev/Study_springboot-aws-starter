@@ -102,7 +102,7 @@ Jnuit5
   - @WithMockUser 어노테이션은 MockMvc에서만 작동
 * @WebMvcTest에 secure 옵션은 2.1부터 Deprecated 되었음
 
-#### AWS 인프라 구축
+#### AWS EC2 구축
 * EC2 생성 (Default VPC, Subnet & 새 보안그룹 생성)
 * EIP 생성 (Amazon ) 및 연결
 * EC2 Java 세팅
@@ -120,3 +120,45 @@ Jnuit5
   - sudo vim /etc/hosts
     - 127.0.0.1 springboot-aws-starter (추가)
     - curl springboot-aws-starter (확인)
+* mysql 설치
+  - sudo yum install mysql
+
+#### AWS RDS(Maria DB) 구축
+* 사용자 이름 : admin
+* 암호 : admin1234
+* 퍼블릭 엑세스 가능 옵션 true (보안그룹에서 차단 설정)
+* 파라미터 그룹 생성, 파라미터 값 설정 후 미리 생성해 둔 RDS(Maria DB)에 연결, 즉시 적용 및 재부팅
+  - character-set-client : utf8mb4
+  - character-set-connection : utf8mb4
+  - character-set-database : utf8mb4
+  - character-set-filesystem : utf8mb4
+  - character-set-results : utf8mb4
+  - character_set_server : utf8mb4
+  - collation_connection : utf8mb4_unicode_ci
+  - collation_server : utf8mb4_unicode_ci
+  - max_connections : 150
+* 보안그룹 생성 및 연결
+  - 기존 EC2 보안그룹 및 내 IP 설정
+  - EC2 인스턴스는 대수가 늘어날 가능성이 있어 보편적으로 위와 같이 보안 그룹간 연동을 진행함
+* DB 접속
+  - Database 생성
+  - show variables like 'c%';
+  - ALTER DATABASE springboot_aws_starter 
+    CHARACTER SET = 'utf8mb4' 
+    COLLATE = 'utf8mb4_general_ci';
+  - SET collation_server = 'utf8mb4_general_ci';
+  - SELECT @@time_zone, now();
+  - 테이블 생성은 인코딩 설정 변경후 하는 것이 좋음(자동 변경이 되지 않아 강제로 적용해야 하기 때문에)
+  - CREATE TABLE test (
+        id bigint(20) NOT NULL AUTO_INCREMENT,
+        content varchar(255) DEFAULT NULL,
+        PRIMARY KEY (id)
+    ) ENGINE = InnoDB;
+
+#### EC2에서 RDS(MariaDB) 접속
+* mysql -u 계정 -p -h Host주소
+  - mysql -u admin -p -h springboot-aws-starter.chgk0xrg8hpj.ap-northeast-2.rds.amazonaws.com
+  - SHOW DATABASES;
+  - SELECT * FROM test;
+
+  
