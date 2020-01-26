@@ -99,5 +99,5 @@ Jnuit5
 * application.properties(yaml) 파일은 test 경로에 없을시 main 경로에 파일을 자동으로 참조
 * 그러나 application-oauth.properties(yaml) 파일은 자동으로 참조하지 않아 기존 테스트 에러 발생
 * spring-security-test 의존성 추가 (testImplementation)
-  - @WithMockUser 어노테이션ㅇ느 MockMvc에서만 작동
+  - @WithMockUser 어노테이션은 MockMvc에서만 작동
 * @WebMvcTest에 secure 옵션은 2.1부터 Deprecated 되었음
