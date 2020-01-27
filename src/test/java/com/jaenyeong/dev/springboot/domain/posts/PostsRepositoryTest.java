@@ -50,7 +50,7 @@ public class PostsRepositoryTest {
 	@Test
 	public void add_baseTimeEntity() {
 		// given
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = LocalDateTime.of(2020, 1, 26, 0, 0, 0);
 		postsRepository.save(
 				Posts.builder()
 						.title("title")
@@ -70,5 +70,5 @@ public class PostsRepositoryTest {
 		assertThat(posts.getCreateDate()).isAfter(now);
 		assertThat(posts.getModifiedDate()).isAfter(now);
 	}
-	
+
 }

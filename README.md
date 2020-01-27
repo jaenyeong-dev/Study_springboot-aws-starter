@@ -161,4 +161,12 @@ Jnuit5
   - SHOW DATABASES;
   - SELECT * FROM test;
 
-  
+#### EC2에 프로젝트 배포
+* sudo yum install git
+* git --version (2.14.5)
+* mkdir ~/app && mkdir ~/app/step1 (프로젝트를 저장할 디렉토리 생성)
+* cd ~/app/step1/
+* git clone https://github.com/jaenyeong-dev/Study_springboot-aws-starter.git
+* ./gradlew test
+  - git pull (소스 수정시 다시 내려받음)
+  - chmod +x ./gradlew (Permission denied 일 때 파일 권한 추가)

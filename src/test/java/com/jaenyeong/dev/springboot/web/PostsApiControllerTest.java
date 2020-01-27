@@ -35,8 +35,12 @@ public class PostsApiControllerTest {
 	@LocalServerPort
 	private int port;
 
-	@Autowired
-	private TestRestTemplate restTemplate;
+	/**
+	 * private TestRestTemplate restTemplate
+	 * MockMvc를 사용한 테스트로 변경하여 주석처리
+	 */
+//	@Autowired
+//	private TestRestTemplate restTemplate;
 
 	@Autowired
 	private PostsRepository postsRepository;
