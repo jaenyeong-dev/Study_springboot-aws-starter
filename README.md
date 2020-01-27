@@ -237,3 +237,55 @@ Jnuit5
     classpath가 붙으면 jar 안에 있는 resources 디렉토리를 기준으로 경로 생성
     application-oauth.yaml(properties) 파일은 외부에 파일이 있기 때문에 절대 경로 사용
 * 실행파일 종료 상태 확인 후 deploy.sh 파일 다시 실행
+
+#### RDS 접근
+* 테이블 생성 (H2 > MariaDB)
+* 프로젝트 설정 (Maria DB 드라이버 추가)
+* EC2 설정 (EC2 서버 인스턴스 내부에 접속 정보를 관리하도록 설정)
+* 아래 쿼리(테스트 코드 실행시 로그로 생성되는 쿼리)를 통하여 RDS에 테이블 생성 (posts, user)
+  - create table posts (
+        id bigint not null auto_increment,
+        create_date datetime, 
+        modified_date datetime, 
+        author varchar(255), 
+        content TEXT not null, 
+        title varchar(500) not null, 
+        primary key (id)
+    ) engine=InnoDB;
+  - create table user (
+        id bigint not null auto_increment, 
+        create_date datetime, 
+        modified_date datetime, 
+        email varchar(255) not null, 
+        name varchar(255) not null, 
+        picture varchar(255), 
+        role varchar(255) not null, 
+        primary key (id)
+    ) engine=InnoDB;
+* Spring Session 테이블 생성
+  - CREATE TABLE SPRING_SESSION (
+    	PRIMARY_ID CHAR(36) NOT NULL,
+    	SESSION_ID CHAR(36) NOT NULL,
+    	CREATION_TIME BIGINT NOT NULL,
+    	LAST_ACCESS_TIME BIGINT NOT NULL,
+    	MAX_INACTIVE_INTERVAL INT NOT NULL,
+    	EXPIRY_TIME BIGINT NOT NULL,
+    	PRINCIPAL_NAME VARCHAR(100),
+    	CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (PRIMARY_ID)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
+    
+    CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON SPRING_SESSION (SESSION_ID);
+    CREATE INDEX SPRING_SESSION_IX2 ON SPRING_SESSION (EXPIRY_TIME);
+    CREATE INDEX SPRING_SESSION_IX3 ON SPRING_SESSION (PRINCIPAL_NAME);
+    
+    CREATE TABLE SPRING_SESSION_ATTRIBUTES (
+    	SESSION_PRIMARY_ID CHAR(36) NOT NULL,
+    	ATTRIBUTE_NAME VARCHAR(200) NOT NULL,
+    	ATTRIBUTE_BYTES BLOB NOT NULL,
+    	CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
+    	CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID) REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
+* MariaDB 드라이버 의존성 추가
+  - implementation('org.mariadb.jdbc:mariadb-java-client')
+* application-real.yaml(properties) 파일 생성
+  - 서버에서 구동될 환경 설정 파일
