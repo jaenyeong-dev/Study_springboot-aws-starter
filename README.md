@@ -313,3 +313,17 @@ Jnuit5
     application-real.yaml(properties) 파일 안에 spring.profiles.include=oauth,real-db 옵션으로 인해 real-db 또한 활성화됨
 * curl localhost:8080
   - 스프링부트 실행 후 해당 명령어로 확인
+
+#### 소셜로그인 EC2 설정
+* EC2 인스턴스에 보안그룹에 해당 포트 인바운드 확인
+* [Google] console.cloud.google.com/home/dashboard (구글 웹 콘솔) 접속하여 해당 프로젝트 설정
+  - jaenyeong.dev@gmail.com 계정 사용
+  - API 및 서비스 > 사용자 인증정보 > OAuth 동의화면
+    승인된 도메인에 해당 인스턴스 퍼블릭 DNS 정보 입력 엔터 후 저장 버튼 클릭 (http, 포트 및 하위 경로 제외)
+  - API 및 서비스 > 사용자 인증정보
+    승인된 리디렉션 URI에 해당 인스턴스 '퍼블릭 DNS:8080' + '/login/oauth2/code/google' 추가
+* [Naver] developers.naver.com/apps/#/myapps (네이버 개발자 센터) 접속하여 해당 프로젝트 설정
+  - jaenyeongdev@naver.com 계정 사용
+  - 내 어플리케이션 > API 설정 > PC 웹 항목
+    서비스 URL에 해당 인스턴스 퍼블릭 DNS 정보 입력 (http 포함, 포트 및 하위 경로 제외)
+    콜백 URL에 해당 인스턴스 '퍼블릭 DNS:8080' + '/login/oauth2/code/naver' 추가
