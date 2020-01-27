@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:mariadb://rds엔드포인트:포트명/스키마명
+    username: ID
+    password: Password
+    driver-class-name: org.mariadb.jdbc.Driver

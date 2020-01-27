@@ -289,3 +289,27 @@ Jnuit5
   - implementation('org.mariadb.jdbc:mariadb-java-client')
 * application-real.yaml(properties) 파일 생성
   - 서버에서 구동될 환경 설정 파일
+* application-real-db.yaml(properties) 파일을 EC2 인스턴스에 생성
+  - RDS 접속 정보 설정 파일
+    spring:
+      jpa:
+        hibernate:
+          ddl-auto: none
+      datasource:
+        url: jdbc:mariadb://rds엔드포인트:포트명/스키마명
+        username: ID
+        password: Password
+        driver-class-name: org.mariadb.jdbc.Driver
+  - spring.jpa.hibernate.ddl-auto=none
+    JPA로 테이블이 자동 생성되는 옵션을 None(하지 않음)으로 지정
+    실제 운영되는 서비스는 JPA로 테이블을 생성하게 하지 말것
+* deploy.sh 파일이 real profile을 사용할 수 있도록 수정
+  - nohup java -jar \
+        -Dspring.config.location=classpath:/application.yaml,/home/ec2-user/app/application-oauth.yaml \
+        -Dspring.profiles.active=real \
+        $REPOSITORY/$JAR_NAME 2>&1 &
+  - -Dspring.profiles.active=real
+    application-real.yaml(properties) 파일 활성화
+    application-real.yaml(properties) 파일 안에 spring.profiles.include=oauth,real-db 옵션으로 인해 real-db 또한 활성화됨
+* curl localhost:8080
+  - 스프링부트 실행 후 해당 명령어로 확인
