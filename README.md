@@ -170,3 +170,8 @@ Jnuit5
 * ./gradlew test
   - git pull (소스 수정시 다시 내려받음)
   - chmod +x ./gradlew (Permission denied 일 때 파일 권한 추가)
+  - ./gradlew test 명령 실행시
+    Error
+    Could not open JPA EntityManager for transaction;
+    nested exception is java.lang.IllegalStateException: EntityManagerFactory is closed
+    로컬에서만 에러 발생 (EC2 인스턴스에서는 성공) 확인필요
