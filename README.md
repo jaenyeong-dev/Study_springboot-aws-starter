@@ -166,7 +166,7 @@ Jnuit5
 * git --version (2.14.5)
 * mkdir ~/app && mkdir ~/app/step1 (프로젝트를 저장할 디렉토리 생성)
 * cd ~/app/step1/
-* git clone https://github.com/jaenyeong-dev/Study_springboot-aws-starter.git
+* git clone https://github.com/jaenyeong-dev/Study_springboot-aws-starter.git springboot-aws-starter
 * ./gradlew test
   - git pull (소스 수정시 다시 내려받음)
   - chmod +x ./gradlew (Permission denied 일 때 파일 권한 추가)
@@ -175,3 +175,65 @@ Jnuit5
     Could not open JPA EntityManager for transaction;
     nested exception is java.lang.IllegalStateException: EntityManagerFactory is closed
     로컬에서만 에러 발생 (EC2 인스턴스에서는 성공) 확인필요
+    
+#### 배포 스크립트 생성
+* vim ~/app/git/deploy.sh (아래는 셸 스크립트 파일 내용)
+
+  #!/bin/bash
+  
+  REPOSITORY=/home/ec2-user/app/step1
+  PROJECT_NAME=springboot-aws-starter
+  
+  cd $REPOSITORY/$PROJECT_NAME/
+  
+  echo "> Git Pull"
+  
+  git pull
+  
+  echo "> Project Build start"
+  
+  ./gradlew build
+  
+  echo "> Move step1 directory"
+  
+  cd $REPOSITORY
+  
+  echo "> Copy Build file"
+  
+  cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
+  
+  echo "> Check Processing PID NOW"
+  
+  CURRENT_PID=$(pgrep -f ${PROJECT_NAME}*.jar)
+  
+  echo " Current Processing PID : $CURRENT_PID"
+  
+  if [ -z "$CURRENT_PID" ]; then
+      echo "> It will not be terminated to isn't running application"
+  else
+      echo "> kill -15 $CURRENT_PID"
+      kill -15 $CURRENT_PID
+      sleep 5
+  fi
+  
+  echo "> Deploy New application"
+  
+  JAR_NAME=$(ls -tr $REPOSITORY/ | grep *.jar | tail -n 1)
+  
+  echo "> JAR Name : $JAR_NAME"
+  
+  nohup java -jar $REPOSITORY/$JAR_NAME 2>&1 &
+  
+* chmod +x ./deploy.sh (권한 변경)
+* ./deploy.sh (셸 스크립트 파일 실행)
+* vim nohup.out (실행 상태 확인 > 인증, 인가 정보 파일로 인하여 에러)
+* vim /home/ec2-user/app/application-oauth.yaml(properties) (인증, 인가 정보 파일 생성, 내용 복사 후 저장)
+* 셸 스크립트 실행 파일 수정
+  - #nohup java -jar $REPOSITORY/$JAR_NAME 2>&1 &
+  - nohup java -jar \
+        -Dspring.config.location=classpath:/application.yaml,/home/ec2-user/app/application-oauth.yaml \
+        $REPOSITORY/$JAR_NAME 2>&1 &
+  - DSpring.config.location : 스프링 설정 파일 위치 지정
+    classpath가 붙으면 jar 안에 있는 resources 디렉토리를 기준으로 경로 생성
+    application-oauth.yaml(properties) 파일은 외부에 파일이 있기 때문에 절대 경로 사용
+* 실행파일 종료 상태 확인 후 deploy.sh 파일 다시 실행
