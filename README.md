@@ -327,3 +327,8 @@ Jnuit5
   - 내 어플리케이션 > API 설정 > PC 웹 항목
     서비스 URL에 해당 인스턴스 퍼블릭 DNS 정보 입력 (http 포함, 포트 및 하위 경로 제외)
     콜백 URL에 해당 인스턴스 '퍼블릭 DNS:8080' + '/login/oauth2/code/naver' 추가
+    
+#### Travis CI 설정
+* Github에서 제공하는 무료 CI 서비스 (https://travis-ci.org)
+* 계정명 > Settings 해당 프로젝트 (Study_springboot-aws-starter) 활성화
+* build.gradle과 같은 위치에 .travis.yml 파일 생성
