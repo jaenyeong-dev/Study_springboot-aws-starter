@@ -198,7 +198,7 @@ Jnuit5
   
   cd $REPOSITORY
   
-  echo "> Copy Build file"
+  echo "> Build Copy file"
   
   cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
   
@@ -412,4 +412,56 @@ Jnuit5
 * AWS CodeDeploy 설정은 appspec.yml 파일로 진행
   - 내용은 위 파일 참조
 * .travis.yml 파일에도 CodeDeploy 내용 추가
+
+#### 배포 자동화 구성 (Jar 파일 배포, 실행)
+* deploy.sh 파일 추가
+  - /home/ec2-user/app/step2 경로에 deploy.sh 생성
+    - 해당 프로젝트에서 script 디렉토리 생성 후 스크립트 생성 (아래는 셸 스크립트 파일 내용)
+    
+      #!/bin/bash
+      
+      REPOSITORY=/home/ec2-user/app/step2
+      PROJECT_NAME=springboot-aws-starter
+      
+      echo "> Build copy file"
+      
+      cp $REPOSITORY/zip/*.jar $REPOSITORY/
+      
+      echo "> Check Processing PID NOW"
+      
+      CURRENT_PID=$(pgrep -fl $PROJECT_NAME | grep jar | awk '{print $1}')
+      
+      echo " Current Processing PID : $CURRENT_PID"
+      
+      if [ -z "$CURRENT_PID" ]; then
+          echo "> It will not be terminated to isn't running application"
+      else
+          echo "> kill -15 $CURRENT_PID"
+          kill -15 $CURRENT_PID
+          sleep 5
+      fi
+      
+      echo "> Deploy New application"
+      
+      JAR_NAME=$(ls -tr $REPOSITORY/ | grep *.jar | tail -n 1)
+      
+      echo "> JAR Name : $JAR_NAME"
+      
+      echo "> Add execution permission on $JAR_NAME"
+      
+      sudo chmod +x $JAR_NAME
+      
+      echo "> Run $JAR_NAME"
+      
+      nohup java -jar \
+              -Dspring.config.location=/application.yaml,classpath:/application-real.yaml,/home/ec2-user/app/application-oauth.yaml,/home/ec2-user/app/application-real-db.yaml \
+              -Dspring.profiles.active=real \
+              $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+* .travis.yml 파일 수정
+  - 모든 파일을 zip 파일로 만드는 것 수정 (Jar, appspec.yml, script 등 파일이 실제로 필요함) > before_deploy 수정
+  - Travis CI는 S3로 특정 파일만 업로드가 안되서 (디렉토리 단위로만 가능) deploy 디렉토리는 항상 생성
+  - before-deploy에는 zip 파일에 포함시킬 파일들을 저장
+  - zip -r 은 before-deploy 디렉토리 전체 파일을 압축
+* appspec.yml 파일 수정
+  - permissions, hooks 추가
 
