@@ -365,3 +365,8 @@ Jnuit5
   - 역할 이름 입력 후 생성
 * 해당 EC2 인스턴스 마우스 우클릭 > 인스턴스 설정 > IAM 역할연결/바꾸기
   - 위에서 생성한 역할 선택, 저장
+* .travis.yml 파일에 ./gradle test에러로 인해 before_script(pgrep -f gradle | xargs kill) 임시 추가
+  - ./gradle test가 간헐적으로 성공, 실패됨 (기존 종료되지 않은 gradle 데몬이 충돌되는 것으로 예상)
+  - Error
+    - Could not open JPA EntityManager for transaction;
+    - JPA EntityManagerFactory is closed
