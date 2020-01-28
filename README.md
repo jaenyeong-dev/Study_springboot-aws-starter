@@ -331,4 +331,4 @@ Jnuit5
 #### Travis CI 설정
 * Github에서 제공하는 무료 CI 서비스 (https://travis-ci.org)
 * 계정명 > Settings 해당 프로젝트 (Study_springboot-aws-starter) 활성화
-* build.gradle과 같은 위치에 .travis.yml 파일 생성
+* build.gradle과 같은 위치에 .travis.yml 파일 생성 (.travis.yaml 파일은 인식 못함)
