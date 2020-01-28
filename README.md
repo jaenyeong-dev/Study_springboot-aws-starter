@@ -357,3 +357,11 @@ Jnuit5
   - 명령어의 마지 위치는 본인의 프로젝트 이름일 것
   - 배포 등 외부 서비스와 연동 행위 선언
     * deploy:
+    
+#### AWS CodeDeploy 연동 2
+* EC2 IAM 역할 추가
+  - AWS 서비스 > EC2 > AmazonEC2RoleforAWSCodeDeploy 정책 선택
+  - 원하는 태그 추가
+  - 역할 이름 입력 후 생성
+* 해당 EC2 인스턴스 마우스 우클릭 > 인스턴스 설정 > IAM 역할연결/바꾸기
+  - 위에서 생성한 역할 선택, 저장

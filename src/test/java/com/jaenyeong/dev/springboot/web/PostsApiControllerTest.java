@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -57,7 +56,10 @@ public class PostsApiControllerTest {
 
 	@Before
 	public void setup() {
-		mvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
+		mvc = MockMvcBuilders
+				.webAppContextSetup(context)
+				.apply(springSecurity())
+				.build();
 	}
 
 	@After
@@ -180,11 +182,12 @@ public class PostsApiControllerTest {
 
 		PostsUpdateRequestDto requestDto = PostsUpdateRequestDto.builder()
 				.title(expectedTitle)
-				.content(expectedContent).build();
+				.content(expectedContent)
+				.build();
 
 		String url = "http://localhost:" + port + "/api/v1/posts/" + updateId;
 
-		HttpEntity<PostsUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+//		HttpEntity<PostsUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
 		// when
 //		ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
