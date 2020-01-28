@@ -13,10 +13,11 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
 
+# gradle processing kill
+before_install: "pgrep -f gradle | xargs kill"
+
 # 지정한 브랜치에 push 되었을 때 실행되는 스크립트 명령어
-script:
-  - "pgrep -f gradle | xargs kill"
-  - "./gradlew clean build"
+script: "./gradlew clean build"
 
 # 배포 전 실행
 before_deploy:
