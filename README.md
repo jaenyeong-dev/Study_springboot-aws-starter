@@ -464,4 +464,6 @@ Jnuit5
   - zip -r 은 before-deploy 디렉토리 전체 파일을 압축
 * appspec.yml 파일 수정
   - permissions, hooks 추가
+* 이슈 발생시 CodeDeploy 로그 확인
+  - /opt/codedeploy-agent/deployment-root 경로에 로그 등을 확인하여 처리
 
