@@ -14,7 +14,9 @@ cache:
     - '$HOME/.gradle'
 
 # 지정한 브랜치에 push 되었을 때 실행되는 스크립트 명령어
-script: "./gradlew clean build"
+script:
+  - "pgrep -f gradle | xargs kill"
+  - "./gradlew clean build"
 
 # 배포 전 실행
 before_deploy:
