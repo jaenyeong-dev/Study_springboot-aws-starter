@@ -360,7 +360,7 @@ Jnuit5
     
 #### AWS CodeDeploy 연동 2
 * EC2 IAM 역할 추가
-  - AWS 서비스 > EC2 > AmazonEC2RoleforAWSCodeDeploy 정책 선택
+  - AWS 서비스 > EC2 > AmazonEC2RoleforAWSCodeDeploy 정책 연결
   - 원하는 태그 추가
   - 역할 이름 입력 후 생성
 * 해당 EC2 인스턴스 마우스 우클릭 > 인스턴스 설정 > IAM 역할연결/바꾸기
@@ -370,3 +370,46 @@ Jnuit5
   - Error
     - Could not open JPA EntityManager for transaction;
     - JPA EntityManagerFactory is closed
+* CodeDeploy 에이전트 설치
+  - EC2 인스턴스에서 CLI 실행
+    - aws s3 cp s3://aws-codedeploy-ap-northeast-2/latest/install . --region ap-northeast-2
+    - 성공시 download: s3://aws-codedeploy-ap-northeast-2/latest/install to ./install 출력
+    - sudo chmod +x ./install
+    - sudo ./install auto
+    - sudo service codedeploy-agent status
+    - 정상 상태일 경우 The AWS CodeDeploy agent is running as PID *** 출력
+* CodeDeploy 권한 생성 (EC2 접근용)
+  - AWS IAM 역할 추가
+    - AWS 서비스 > CodeDeploy > AWSCodeDeployRole 정책 연결
+    - 원하는 태그 추가
+    - 역할 이름 입력 후 생성
+* AWS 배포 설명
+  - Code Commit
+    - Github 같은 코드 저장소
+  - Code Build
+    - Travis CI와 마찬가지로 빌드용 서비스 (젠킨스/팀시티 등을 대신 이용함)
+  - CodeDeploy
+    - AWS 배포 서비스
+    - 위 서비스들과 다르게 대체제가 없음
+    - 오토 스케일링 그룹 배포, 블루 그린 배포, 롤링 배포, EC2 단독 배포 등 많은 기능을 지원
+* CodeDeploy 어플리케이션 생성
+  - AWS 서비스에서 CodeDeploy 선택 > 어플리케이션 > 생성 버튼 클릭
+  - 어플리케이션 이름 입력 후 컴퓨팅 플랫폼 설정 (여기선 EC2/온프레미스)
+  - 해당 어플리케이션 정보에서 배포 그룹 생성 버튼 클릭
+  - 배포 그룹이름 입력 후 서비스 역할 선택 (앞에서 생성한 CodeDeploy용 IAM 역할 선택)
+  - 배포 유형은 현재 위치 선택 (2대 이상일 경우에 블루/그린 선택)
+  - 환경 구성에서는 Amazon EC2 인스턴스 선택
+  - 원하는 태그 추가
+  - 배포 설정 > 배포 구성
+    - CodeDeployDefaultAllAtOnce (한대씩, 절반씩 등 선택 옵션 확인할 것)
+  - 로드 밸런서 활성화 체크 박스 풀고 배포 그룹 생성 버튼 클릭
+
+#### Travis CI, S3, CodeDeploy 연동
+* S3에서 넘겨줄 zip 파일을 저장할 디렉토리 생성
+  - mkdir ~/app/step2 && mkdir ~/app/step2/zip
+* 순서
+  - Travis CI에 build가 끝나면 S3에 zip 파일이 전송, 이 zip 파일은 /home/ec2-user/app/step2/zip 으로 복사, 압축을 풀 예정
+* AWS CodeDeploy 설정은 appspec.yml 파일로 진행
+  - 내용은 위 파일 참조
+* .travis.yml 파일에도 CodeDeploy 내용 추가
+

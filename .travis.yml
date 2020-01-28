@@ -41,6 +41,22 @@ deploy:
     local_dir: deploy
     wait-until-deployed: true
 
+  # CodeDeploy 추가
+  - provider: codedeploy
+    # access_key_id, secret_access_key는 Travis repo setting에 설정된 값
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    # AWS S3 버킷명
+    bucket: springboot-aws-starter
+    region: ap-northeast-2
+    # 빌드 파일을 압축해서 전달
+    key: springboot-aws-starter.zip
+    bundle_type: zip
+    # AWS 콘솔에서 등록한 CodeDeploy 어플리케이션
+    application: springboot-aws-starter
+    # AWS 콘솔에서 등록한 CodeDeploy 배포 그룹
+    deployment_group: springboot-aws-starter-group
+
 # CI 실행 완료시 메일로 알람
 notifications:
   email:
