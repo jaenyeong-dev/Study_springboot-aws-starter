@@ -332,3 +332,28 @@ Jnuit5
 * Github에서 제공하는 무료 CI 서비스 (https://travis-ci.org)
 * 계정명 > Settings 해당 프로젝트 (Study_springboot-aws-starter) 활성화
 * build.gradle과 같은 위치에 .travis.yml 파일 생성 (.travis.yaml 파일은 인식 못함)
+
+#### AWS CodeDeploy 연동
+* CodeDeploy에는 저장 기능이 없음 > Travis CI가 빌드한 결과물을 S3 등을 이용하여 CodeDeploy가 가져갈 수 있도록 처리함
+* 빌드, 배포를 분리하는 것을 추천함
+  - CodeDeploy로 빌드, 배포 가능하나 (Github 코드를 가져오는 기능 지원) 빌드 없이 배포만 필요할 때 대응이 어려움
+  - 빌드, 배포가 분리되어 있으면 기존에 빌드된 Jar 파일을 재사용하면 되지만 CodeDeploy 사용시 항상 빌드를 하게 되어 확장성이 떨어짐
+* AWS IAM
+  - 사용자 > 사용자추가
+  - 액세스 유형 : 프로그래밍 방식 엑세스만 허용
+  - 기존 정책 연결 : s3full, CodeDeployFull 연결
+  - Name 속성 삽입
+  - 엑세스 ID, 엑세스 시크릿 획득
+* Travis CI에 키 등록
+  - Settings > Environment Variables
+  - AWS_ACCESS_KEY, AWS_SECRET_KEY 변수에 위 엑세스 키, 시크릿 데이터 바인딩, 추가
+  - 이 변수에 값들은 .travis.yml 파일내에서 각각 $AWS_ACCESS_KEY, $AWS_SECRET_KEY 변수명으로 사용 가능
+* S3 버킷 생성
+  - 버킷명 등 기입, 버킷 버전 정보 등은 크게 상관 없음, 모든 퍼블릭 엑세스 차단 체크 되어 있는 상태로 버킷 생성
+* .travis.yml 파일에 추가
+  - 배포 전 실행
+    * before_deploy:
+  - CodeDeploy는 Jar 파일을 인식 못함, Jar+기타 설정 파일을 모아 압축
+  - 명령어의 마지 위치는 본인의 프로젝트 이름일 것
+  - 배포 등 외부 서비스와 연동 행위 선언
+    * deploy:
