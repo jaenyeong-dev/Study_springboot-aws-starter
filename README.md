@@ -466,4 +466,7 @@ Jnuit5
   - permissions, hooks 추가
 * 이슈 발생시 CodeDeploy 로그 확인
   - /opt/codedeploy-agent/deployment-root 경로에 로그 등을 확인하여 처리
+* jar version 변경
+  - build.gradle에서 변경
+  - 확인용으로 index.mustache 파일에 h1 태그를 ver3으로 변경
 
