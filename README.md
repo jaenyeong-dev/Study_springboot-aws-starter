@@ -469,4 +469,28 @@ Jnuit5
 * jar version 변경
   - build.gradle에서 변경
   - 확인용으로 index.mustache 파일에 h1 태그를 ver3으로 변경
-
+  
+#### 무중단 배포
+* nginx (리버스 프록시)와 스프링부트 1(8081), 스프링부트 2(8082)을 연결
+  - 가장 저렴하고 쉬움, 여유만 된다면 블루 그린 배포 방식도 좋음
+* EC2 인스턴스에 nginx 설치
+  - EC2 인스턴스에 접속 후 아래 CLI 실행
+  - sudo yum install nginx
+  - sudo service nginx start
+  - 성공시 Starting nginx: [ OK ] 출력
+* nginx 포트 번호는 80 > AWS 보안그룹에 추가 (80 포트 제거한 URL 추가)
+  - EC2 보안 그룹에 80포트 설정 추가 후 Google, Naver 로그인 리다이렉션 URL에 추가
+  - Google : http://ec2-13-209-108-152.ap-northeast-2.compute.amazonaws.com/login/oauth2/code/google 추가
+  - Naver : http://ec2-13-209-108-152.ap-northeast-2.compute.amazonaws.com/login/oauth2/code/naver 추가
+* nginx 설정
+  - sudo vim /etc/nginx/nginx.conf
+  - location / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+    }
+  - proxy_pass : nginx로 요청이 오면 localhost:8080으로 전달
+  - proxy_set_header xxx : 실제 요청 데이터를 header의 각 항목에 할당
+  - sudo service nginx restart
+  - springboot 리로딩시에도 nginx 리스타트
