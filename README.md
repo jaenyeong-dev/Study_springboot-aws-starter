@@ -500,4 +500,40 @@ Jnuit5
 * 각 profile 설정 파일 찾기 테스트 코드 작성
 * Security Config 클래스에 설정 추가
   - antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll()
-  
+* real1, real2 profile 생성
+  - port 정보만 다름
+* nginx 설정 변경
+  - /etc/nginx/conf.d 경로에 service-url.inc 파일 생성
+    - sudo vim /etc/nginx/conf.d/service-url.inc
+    - set $service_url http://127.0.0.1:8080; (해당 코드를 파일안에 입력)
+  - sudo vim /etc/nginx/nginx.conf
+    - include /etc/nginx/conf.d/service-url.inc; (추가)
+    - proxy_pass $service_url; (location / {} 안에 기존 proxy_pass 변경)
+  - sudo service nginx restart
+* 배포 스크립트 작성
+  - EC2 인스턴스에 step3 디렉토리 생성
+    - mkdir ~/app/step3 && mkdir ~/app/step3/zip
+  - appspec.yml 파일 수정 (무중단 배포를 위해 step3로 배포되도록 수정)
+    - destination: /home/ec2-user/app/step3/zip/ (변경)
+  - 무중단 배포를 위해 5개의 스크립트 작성
+    - stop.sh : 실행 중이지만 기존 nginx에 연결 되어 있지 않은 스프링 부트 종료
+    - start.sh : 배포할 신규 스프링 부트를 stop.sh로 종료한 'profile'로 실행
+    - health.sh : start.sh로 실행한 스프링 부트가 정상 실행됐는지 확인
+    - switch.sh : nginx가 바라보는 스프링 부트를 최신으로 변경
+    - profile.sh : 위 4개 스크립트 파일에서 공용으로 사용할 'profile', 포트 확인 로직
+  - appspec.yml 파일에서 위 스크립트를 사용하도록 설정
+* 배포 Jar 파일명 변경 (잦은 배포로 파일명 충돌할 가능성으로 인해 변경)
+  - build.gradle
+* switch.sh 파일 명령어 오타로 인한 에러 처리
+  - echo 'set \$service_url http://127.0.0.1:${IDLE_PORT};'
+  - 위 echo 명령어 제일 앞에 ' > ' 를 붙어서 nginx 에러 발생
+    - nginx: [emerg] unknown directive ">" in /etc/nginx/conf.d/service-url.inc:1
+    - nginx: configuration file /etc/nginx/nginx.conf test failed
+* stop.sh 수정
+  - 최 상단애 ABSPATH=$(readlink -f $0) 추가 (책에 빠져있음)
+* health.sh, switch.sh 파일 echo 명령어 안에 변수 {} 제거
+* profile.sh 로직 수정
+* switch.sh 수정
+  - echo "set \$service_url http://127.0.0.1:${IDLE_PORT};" | sudo tee /etc/nginx/conf.d/service-url.inc
+  - 책에는 ' (single quotation) 으로 감싸라고 되어 있으나 ' 으로 감싸면 에러
+* 배포 후 다시 배포하면 다른 port(profile)의 스프링 부트의 덮어 씌어짐

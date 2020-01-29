@@ -3,7 +3,7 @@
 REPOSITORY=/home/ec2-user/app/step2
 PROJECT_NAME=springboot-aws-starter
 
-echo "> Build copy file"
+echo "> Copy Build file"
 
 cp $REPOSITORY/zip/*.jar $REPOSITORY/
 

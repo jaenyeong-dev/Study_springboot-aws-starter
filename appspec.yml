@@ -6,7 +6,9 @@ files:
   # source - CodeDeploy에서 전달해준 파일 중 목적지(destination)으로 이동 시킬 대상을 지정
   - source: /
     # destination - source에서 지정된 파일을 받을 위치
-    destination: /home/ec2-user/app/step2/zip/
+    # destination: /home/ec2-user/app/step2/zip/
+    # 무중단 배포를 위해 step3 경로로 수정
+    destination: /home/ec2-user/app/step3/zip/
     # overwrite - 덮어쓰기 여부
     overwrite: yes
 
@@ -19,7 +21,21 @@ permissions:
 
 # CodeDeploy 배포단계에서 실행할 명령어 지정
 hooks:
+  AfterInstall:
+    # nginx와 연결되지 않은 스프링 부트 종료
+    - location: stop.sh
+      timeout: 60
+      runas: ec2-user
+
   ApplicationStart:
-    - location: deploy.sh
+    # - location: deploy.sh
+    # nginx와 연결되지 않은 port로 새 버전의 스프링 부트 실행
+    - location: start.sh
+      timeout: 60
+      runas: ec2-user
+
+  ValidateService:
+    # 새로 실행된 스프링 부트의 실행 상태 확인
+    - location: health.sh
       timeout: 60
       runas: ec2-user
