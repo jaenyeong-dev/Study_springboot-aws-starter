@@ -494,3 +494,10 @@ Jnuit5
   - proxy_set_header xxx : 실제 요청 데이터를 header의 각 항목에 할당
   - sudo service nginx restart
   - springboot 리로딩시에도 nginx 리스타트
+  
+#### 무중단 배포 스크립트 생성
+* profile API 추가 (배포 시에 8081, 8082 중에 무엇을 사용할지 판단 기준)
+* 각 profile 설정 파일 찾기 테스트 코드 작성
+* Security Config 클래스에 설정 추가
+  - antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll()
+  
